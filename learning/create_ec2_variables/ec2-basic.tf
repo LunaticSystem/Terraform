@@ -8,13 +8,14 @@ terraform {
 
 provider "aws" {
   profile = "brendan/terraform" # AWS Credentials Profile
-  region  = "us-west-2"         # AWS Region
+  region  = var.region         # AWS Region from region variable in variables.tf
 }
 
 # Defines a piece of infrastructure. i.e ec2.
-resource "aws_instance" "ec2-basic" {
-  ami           = "ami-830c94e3"
+resource "aws_instance" "ec2-basic-variables" {
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
+
   # Execute commands locally during provisioning.
   provisioner "local-exec" {
     command = "echo ${aws_instance.ec2-basic.public_ip} > ip_address.txt" # Echo's aws ip to ip_address.txt file
